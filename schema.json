@@ -1,0 +1,52 @@
+{
+  "type": "component",
+  "metadata": {},
+  "schema": {
+    "name": "Budibase-Signature-Plugin",
+    "friendlyName": "Signature",
+    "description": "A plugin that allows signatures to be created and saved in budibase",
+    "icon": "AnnotatePen",
+    "settings": [
+      {
+        "type": "field/string",
+        "key": "field",
+        "label": "Field",
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "label",
+        "label": "Label",
+        "defaultValue": "Signature Field"
+      },
+      {
+        "type": "text",
+        "key": "width",
+        "label": "Width",
+        "defaultValue": "800px",
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "height",
+        "label": "Height",
+        "defaultValue": "400px",
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "color",
+        "label": "Pen Colour",
+        "defaultValue": "#000000",
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "background",
+        "label": "Background Colour",
+        "defaultValue": "#FFFFFF",
+        "required": true
+      }
+    ]
+  }
+}
