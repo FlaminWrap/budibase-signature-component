@@ -8,6 +8,12 @@
 	export let height
 	export let color
 	export let background
+  export let borderOutline
+  export let borderColor
+  export let borderWidth
+  export let clearSignatureButtonText
+  export let showClearSignatureButton
+  export let clearButtonConfirmText
 
   //Random UUID to identify the relevant Drawing Canvas
   let canvasID = self.crypto.randomUUID();
@@ -105,32 +111,45 @@ $: formField = formApi?.registerField(
   }
 
   function fillCanvasBackgroundWithColor(canvas, color) {
-  // Thank you Caleb Miller @ Stackoverflow
-  // Get the 2D drawing context from the provided canvas.
-  const context = canvas.getContext('2d');
+    // Thank you Caleb Miller @ Stackoverflow
+    // Get the 2D drawing context from the provided canvas.
+    const context = canvas.getContext('2d');
 
-  // We're going to modify the context state, so it's
-  // good practice to save the current state first.
-  context.save();
+    // We're going to modify the context state, so it's
+    // good practice to save the current state first.
+    context.save();
 
-  // Normally when you draw on a canvas, the new drawing
-  // covers up any previous drawing it overlaps. This is
-  // because the default `globalCompositeOperation` is
-  // 'source-over'. By changing this to 'destination-over',
-  // our new drawing goes behind the existing drawing. This
-  // is desirable so we can fill the background, while leaving
-  // the chart and any other existing drawing intact.
-  // Learn more about `globalCompositeOperation` here:
-  // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-  context.globalCompositeOperation = 'destination-over';
+    // Normally when you draw on a canvas, the new drawing
+    // covers up any previous drawing it overlaps. This is
+    // because the default `globalCompositeOperation` is
+    // 'source-over'. By changing this to 'destination-over',
+    // our new drawing goes behind the existing drawing. This
+    // is desirable so we can fill the background, while leaving
+    // the chart and any other existing drawing intact.
+    // Learn more about `globalCompositeOperation` here:
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+    context.globalCompositeOperation = 'destination-over';
 
-  // Fill in the background. We do this by drawing a rectangle
-  // filling the entire canvas, using the provided color.
-  context.fillStyle = color;
-  context.fillRect(0, 0, canvas.width, canvas.height);
+    // Fill in the background. We do this by drawing a rectangle
+    // filling the entire canvas, using the provided color.
+    context.fillStyle = color;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Restore the original context state from `context.save()`
-  context.restore();
+    // Restore the original context state from `context.save()`
+    context.restore();
+  }
+
+  function clearCanvas(){
+    const canvas = document.getElementById(canvasID)
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function clearButtonConfirm() {
+  let text = clearButtonConfirmText;
+  if (confirm(text) == true) {
+    clearCanvas()
+  }
 }
   </script>
 
@@ -146,7 +165,14 @@ $: formField = formApi?.registerField(
       {label || " "}
     </label>
     <div class="spectrum-Form-itemField">
-      <canvas
+      {#if showClearSignatureButton}
+        <div style="padding-right:5px;padding-bottom:5px;">
+          <button on:click={clearButtonConfirm}>
+            {clearSignatureButtonText}
+          </button>
+        </div>
+      {/if}
+      <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
       id={canvasID}
       {width}
       {height}
@@ -174,7 +200,19 @@ $: formField = formApi?.registerField(
       />
     </div>
     {#if !field}
-    <div class="error">Please select a field</div>
+    <div class="error">Please select a text field</div>
+    {/if}
+    {#if !width}
+    <div class="error">Please define width e.g. 300</div>
+    {/if}
+    {#if !height}
+    <div class="error">Please define height e.g. 300</div>
+    {/if}
+    {#if !color}
+    <div class="error">Please define a pen colour e.g. Black</div>
+    {/if}
+    {#if !background}
+    <div class="error">Please define a background colour e.g. White</div>
     {/if}
     {#if fieldState?.error}
       <div class="error">{fieldState.error}</div>

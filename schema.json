@@ -46,6 +46,93 @@
         "label": "Background Colour",
         "defaultValue": "#FFFFFF",
         "required": true
+      },
+      {
+        "type": "select",
+        "label": "Border Outline",
+        "key": "borderOutline",
+        "defaultValue": "none",
+        "showInBar": true,
+        "barStyle": "picker",
+        "options": [
+          {
+            "label": "Dashed",
+            "value": "dashed"
+          },
+          {
+            "label": "Dotted",
+            "value": "dotted"
+          },
+          {
+            "label": "Double",
+            "value": "double"
+          },
+          {
+            "label": "Groove",
+            "value": "groove"
+          },
+          {
+            "label": "Inset",
+            "value": "inset"
+          },
+          {
+            "label": "None",
+            "value": "none"
+          },
+          {
+            "label": "Outset",
+            "value": "outset"
+          },
+          {
+            "label": "Ridge",
+            "value": "ridge"
+          },
+          {
+            "label": "Solid",
+            "value": "solid"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "key": "borderColor",
+        "label": "Border Colour",
+        "defaultValue": "#000000",
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "borderWidth",
+        "label": "Border Thickness",
+        "defaultValue": "1px",
+        "required": true
+      },
+      {
+        "type": "boolean",
+        "key": "showClearSignatureButton",
+        "label": "Show Clear Signature Button",
+        "defaultValue": true,
+        "required": true
+      },
+      {
+        "type": "text",
+        "key": "clearSignatureButtonText",
+        "label": "Clear Signature Button Text",
+        "defaultValue": "❌",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "key": "clearButtonConfirmText",
+        "label": "Clear Signature Button Confirm Text",
+        "defaultValue": "This will clear the current signature, do you want to contiune?",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
       }
     ]
   }

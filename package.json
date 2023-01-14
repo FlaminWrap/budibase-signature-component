@@ -1,6 +1,6 @@
 {
   "name": "Budibase-Signature-Plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A plugin that allows signatures to be created and saved in budibase",
   "license": "MIT",
   "svelte": "index.js",
