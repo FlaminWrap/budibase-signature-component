@@ -1,5 +1,6 @@
 <script>
   import { getContext, onDestroy, onMount } from "svelte"
+  import Button from "../node_modules/@budibase/bbui/src/Button/Button.svelte"
 
   //Input variables
   export let field
@@ -14,6 +15,7 @@
   export let clearSignatureButtonText
   export let showClearSignatureButton
   export let clearButtonConfirmText
+  export let showButtonIcon
 
   //Random UUID to identify the relevant Drawing Canvas
   let canvasID = self.crypto.randomUUID();
@@ -146,11 +148,13 @@ $: formField = formApi?.registerField(
   }
 
   function clearButtonConfirm() {
-  let text = clearButtonConfirmText;
-  if (confirm(text) == true) {
-    clearCanvas()
+    let text = clearButtonConfirmText;
+    if (confirm(text) == true) {
+      clearCanvas()
+    }
   }
-}
+
+  
   </script>
 
 <div class="spectrum-Form-item" use:styleable={$component.styles}>
@@ -167,9 +171,15 @@ $: formField = formApi?.registerField(
     <div class="spectrum-Form-itemField">
       {#if showClearSignatureButton}
         <div style="padding-right:5px;padding-bottom:5px;">
-          <button on:click={clearButtonConfirm}>
-            {clearSignatureButtonText}
-          </button>
+          {#if showButtonIcon}
+            <Button icon="Erase" primary on:click={clearButtonConfirm}>
+              {clearSignatureButtonText}
+            </Button>
+          {:else}
+            <Button primary on:click={clearButtonConfirm}>
+              {clearSignatureButtonText}
+            </Button>
+          {/if}
         </div>
       {/if}
       <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"

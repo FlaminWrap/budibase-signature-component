@@ -19,6 +19,7 @@ A plugin that allows signatures to be created and saved in budibase, this plugin
 * Show Clear Signature Button - Do you want to show a button at the top of the signature canvas to allow the end user to clear their signature
 * Clear Signature Button Text - The text to display on the clear signature button e.g. ❌, Clear Signature
 * Clear Signature Button Confirm Text - The text to display on the dialog prompt when then clear signature button is pressed e.g. This will clear the current signature, do you want to contiune?
+* Show Clear Signature Button Icon - Show the eraser icon on the clear signature button
 
 ## How to display a saved siganture
 

@@ -97,28 +97,25 @@
         "type": "text",
         "key": "borderColor",
         "label": "Border Colour",
-        "defaultValue": "#000000",
-        "required": true
+        "defaultValue": "#000000"
       },
       {
         "type": "text",
         "key": "borderWidth",
         "label": "Border Thickness",
-        "defaultValue": "1px",
-        "required": true
+        "defaultValue": "1px"
       },
       {
         "type": "boolean",
         "key": "showClearSignatureButton",
         "label": "Show Clear Signature Button",
-        "defaultValue": true,
-        "required": true
+        "defaultValue": true
       },
       {
         "type": "text",
         "key": "clearSignatureButtonText",
         "label": "Clear Signature Button Text",
-        "defaultValue": "❌",
+        "defaultValue": "Clear Signature",
         "dependsOn": {
           "setting": "showClearSignatureButton",
           "value": true
@@ -133,6 +130,12 @@
           "setting": "showClearSignatureButton",
           "value": true
         }
+      },
+      {
+        "type": "boolean",
+        "key": "showButtonIcon",
+        "label": "Show Clear Signature Button Icon",
+        "defaultValue": true
       }
     ]
   }
