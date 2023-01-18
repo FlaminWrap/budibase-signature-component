@@ -112,6 +112,16 @@
         "defaultValue": true
       },
       {
+        "type": "boolean",
+        "key": "showButtonIcon",
+        "label": "Show Clear Signature Button Icon",
+        "defaultValue": true,
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
         "type": "text",
         "key": "clearSignatureButtonText",
         "label": "Clear Signature Button Text",
@@ -130,12 +140,6 @@
           "setting": "showClearSignatureButton",
           "value": true
         }
-      },
-      {
-        "type": "boolean",
-        "key": "showButtonIcon",
-        "label": "Show Clear Signature Button Icon",
-        "defaultValue": true
       }
     ]
   }
