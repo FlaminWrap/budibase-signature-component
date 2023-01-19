@@ -11,6 +11,7 @@ A plugin that allows signatures to be created and saved in budibase, this plugin
 * Label - Default budibase label for forms
 * Width - The width of the component, valid inputs are css width attributes
 * Height - The height of the component, valid inputs are css height attributes
+* Pen Width - Set the pen width, valid values: 1-50
 * Pen Colour - The colour of the writing on the canvasm, valid inputs are html colours e.g. Black, #000000, rgb(0, 0, 0)
 * Background Colour - The colour of the background, valid inputs are html colours e.g. White, #FFFFFF, rgb(255, 255, 255)
 * Border Outline - The style of the border, set to none for no border

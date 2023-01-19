@@ -16,6 +16,7 @@
   export let showClearSignatureButton
   export let clearButtonConfirmText
   export let showButtonIcon
+  export let penWidth
 
   //Random UUID to identify the relevant Drawing Canvas
   let canvasID = self.crypto.randomUUID();
@@ -67,7 +68,9 @@ $: formField = formApi?.registerField(
 	
 	onMount(() => {
 		context = canvas.getContext('2d')
-		context.lineWidth = 3
+		context.lineWidth = penWidth;
+    context.lineJoin = "round";
+    context.lineCap = "round";
 		
 		handleSize()
 	})
@@ -154,7 +157,6 @@ $: formField = formApi?.registerField(
     }
   }
 
-  
   </script>
 
 <div class="spectrum-Form-item" use:styleable={$component.styles}>
@@ -211,6 +213,9 @@ $: formField = formApi?.registerField(
     </div>
     {#if !field}
     <div class="error">Please select a text field</div>
+    {/if}
+    {#if !penWidth}
+    <div class="error">Please set a pen size</div>
     {/if}
     {#if !width}
     <div class="error">Please define width e.g. 300</div>
