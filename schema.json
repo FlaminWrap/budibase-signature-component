@@ -142,9 +142,29 @@
       },
       {
         "type": "text",
-        "key": "clearButtonConfirmText",
-        "label": "Clear Signature Button Confirm Text",
+        "key": "modalTitle",
+        "label": "Clear Signature Dialog Modal Title",
+        "defaultValue": "Erase Signature",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "key": "modalBody",
+        "label": "Clear Signature Dialog Modal Body Text",
         "defaultValue": "This will clear the current signature, do you want to contiune?",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "key": "modalActionButtonText",
+        "label": "Clear Signature Dialog Modal Action Button Text",
+        "defaultValue": "Erase",
         "dependsOn": {
           "setting": "showClearSignatureButton",
           "value": true

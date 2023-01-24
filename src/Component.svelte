@@ -1,6 +1,8 @@
 <script>
   import { getContext, onDestroy, onMount } from "svelte"
   import Button from "../node_modules/@budibase/bbui/src/Button/Button.svelte"
+  import Modal from "../node_modules/@budibase/bbui/src/Modal/Modal.svelte"
+  import ModalContent from "../node_modules/@budibase/bbui/src/Modal/ModalContent.svelte"
 
   //Input variables
   export let field
@@ -14,9 +16,13 @@
   export let borderWidth
   export let clearSignatureButtonText
   export let showClearSignatureButton
-  export let clearButtonConfirmText
   export let showButtonIcon
   export let penWidth
+  export let modalTitle
+  export let modalActionButtonText
+  export let modalBody
+
+  let eraseSignatureModal
 
   //Random UUID to identify the relevant Drawing Canvas
   let canvasID = self.crypto.randomUUID();
@@ -149,14 +155,6 @@ $: formField = formApi?.registerField(
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
   }
-
-  function clearButtonConfirm() {
-    let text = clearButtonConfirmText;
-    if (confirm(text) == true) {
-      clearCanvas()
-    }
-  }
-
   </script>
 
 <div class="spectrum-Form-item" use:styleable={$component.styles}>
@@ -174,14 +172,25 @@ $: formField = formApi?.registerField(
       {#if showClearSignatureButton}
         <div style="padding-right:5px;padding-bottom:5px;">
           {#if showButtonIcon}
-            <Button icon="Erase" primary on:click={clearButtonConfirm}>
+            <Button icon="Erase" primary on:click={eraseSignatureModal.show}>
               {clearSignatureButtonText}
             </Button>
           {:else}
-            <Button primary on:click={clearButtonConfirm}>
+            <Button primary on:click={eraseSignatureModal.show}>
               {clearSignatureButtonText}
             </Button>
           {/if}
+          <Modal bind:this={eraseSignatureModal}>
+            <ModalContent
+              title={modalTitle}
+              confirmText={modalActionButtonText}
+              onConfirm={clearCanvas}
+            >
+              <span
+                >{modalBody}</span
+              >
+            </ModalContent>
+          </Modal>
         </div>
       {/if}
       <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
