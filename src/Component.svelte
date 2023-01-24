@@ -21,6 +21,7 @@
   export let modalTitle
   export let modalActionButtonText
   export let modalBody
+  export let saveBackgroundColour
 
   let eraseSignatureModal
 
@@ -122,32 +123,34 @@ $: formField = formApi?.registerField(
   }
 
   function fillCanvasBackgroundWithColor(canvas, color) {
-    // Thank you Caleb Miller @ Stackoverflow
-    // Get the 2D drawing context from the provided canvas.
-    const context = canvas.getContext('2d');
+    if (saveBackgroundColour){
+      // Thank you Caleb Miller @ Stackoverflow
+      // Get the 2D drawing context from the provided canvas.
+      const context = canvas.getContext('2d');
 
-    // We're going to modify the context state, so it's
-    // good practice to save the current state first.
-    context.save();
+      // We're going to modify the context state, so it's
+      // good practice to save the current state first.
+      context.save();
 
-    // Normally when you draw on a canvas, the new drawing
-    // covers up any previous drawing it overlaps. This is
-    // because the default `globalCompositeOperation` is
-    // 'source-over'. By changing this to 'destination-over',
-    // our new drawing goes behind the existing drawing. This
-    // is desirable so we can fill the background, while leaving
-    // the chart and any other existing drawing intact.
-    // Learn more about `globalCompositeOperation` here:
-    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-    context.globalCompositeOperation = 'destination-over';
+      // Normally when you draw on a canvas, the new drawing
+      // covers up any previous drawing it overlaps. This is
+      // because the default `globalCompositeOperation` is
+      // 'source-over'. By changing this to 'destination-over',
+      // our new drawing goes behind the existing drawing. This
+      // is desirable so we can fill the background, while leaving
+      // the chart and any other existing drawing intact.
+      // Learn more about `globalCompositeOperation` here:
+      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
+      context.globalCompositeOperation = 'destination-over';
 
-    // Fill in the background. We do this by drawing a rectangle
-    // filling the entire canvas, using the provided color.
-    context.fillStyle = color;
-    context.fillRect(0, 0, canvas.width, canvas.height);
+      // Fill in the background. We do this by drawing a rectangle
+      // filling the entire canvas, using the provided color.
+      context.fillStyle = color;
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Restore the original context state from `context.save()`
-    context.restore();
+      // Restore the original context state from `context.save()`
+      context.restore();
+    }
   }
 
   function clearCanvas(){

@@ -57,6 +57,12 @@
         "required": true
       },
       {
+        "type": "boolean",
+        "key": "saveBackgroundColour",
+        "label": "Save Background Colour",
+        "defaultValue": true
+      },
+      {
         "type": "select",
         "label": "Border Outline",
         "key": "borderOutline",
