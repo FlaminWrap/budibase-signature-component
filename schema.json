@@ -150,7 +150,7 @@
         "type": "text",
         "key": "modalTitle",
         "label": "Clear Signature Dialog Modal Title",
-        "defaultValue": "Erase Signature",
+        "defaultValue": "Clear Signature",
         "dependsOn": {
           "setting": "showClearSignatureButton",
           "value": true

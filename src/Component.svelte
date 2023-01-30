@@ -1,8 +1,6 @@
 <script>
   import { getContext, onDestroy, onMount } from "svelte"
-  import Button from "../node_modules/@budibase/bbui/src/Button/Button.svelte"
-  import Modal from "../node_modules/@budibase/bbui/src/Modal/Modal.svelte"
-  import ModalContent from "../node_modules/@budibase/bbui/src/Modal/ModalContent.svelte"
+  import Canvas from "./Canvas.svelte";
 
   //Input variables
   export let field
@@ -22,11 +20,10 @@
   export let modalActionButtonText
   export let modalBody
   export let saveBackgroundColour
+  export let signatureData
 
-  let eraseSignatureModal
-
-  //Random UUID to identify the relevant Drawing Canvas
-  let canvasID = self.crypto.randomUUID();
+  let canBeDisplayed
+  let errorMessages = [];
   
   //Budibase SDK
   const { styleable } = getContext("sdk");
@@ -65,104 +62,68 @@ $: formField = formApi?.registerField(
     unsubscribe?.();
   });
 
-  //Canvas
-	let canvas
-	let context
-	let isDrawing
-	let start
-	
-	let t, l
-	
-	onMount(() => {
-		context = canvas.getContext('2d')
-		context.lineWidth = penWidth;
-    context.lineJoin = "round";
-    context.lineCap = "round";
-		
-		handleSize()
-	})
-	
-	$: if(context) {
-			context.strokeStyle = color
-	}
-	
-	const handleStart = (({ offsetX: x, offsetY: y }) => { 
-		if(color === background) {
-			context.clearRect(0, 0, width, height)
-		} else {
-			isDrawing = true
-			start = { x, y }
-		}
-	})
-	
-	const handleEnd = () => { isDrawing = false; changeData(); }
-	const handleMove = (({ offsetX: x1, offsetY: y1 }) => {
-		if(!isDrawing) return
-		
-		const { x, y } = start
-		context.beginPath()
-		context.moveTo(x, y)
-		context.lineTo(x1, y1)
-		context.closePath()
-		context.stroke()
-		
-		start = { x: x1, y: y1 }
-	})
-	
-	const handleSize = () => {
-		const { top, left } = canvas.getBoundingClientRect()
-		t = top
-		l = left
-	}
-
-	function changeData(){
-		let canvasData = document.getElementById(canvasID);
-    fillCanvasBackgroundWithColor(canvasData, background)
-		let img = canvasData.toDataURL("image/png");
+  function setSignatureValue(img){
     fieldApi.setValue(img);
   }
 
-  function fillCanvasBackgroundWithColor(canvas, color) {
-    if (saveBackgroundColour){
-      // Thank you Caleb Miller @ Stackoverflow
-      // Get the 2D drawing context from the provided canvas.
-      const context = canvas.getContext('2d');
+  $: checkValid(field, formContext, penWidth, width, height, color, background)
 
-      // We're going to modify the context state, so it's
-      // good practice to save the current state first.
-      context.save();
+  function checkValid(field, formContext, penWidth, width, height, color, background){
+    errorMessages = [];
+    canBeDisplayed = true;
 
-      // Normally when you draw on a canvas, the new drawing
-      // covers up any previous drawing it overlaps. This is
-      // because the default `globalCompositeOperation` is
-      // 'source-over'. By changing this to 'destination-over',
-      // our new drawing goes behind the existing drawing. This
-      // is desirable so we can fill the background, while leaving
-      // the chart and any other existing drawing intact.
-      // Learn more about `globalCompositeOperation` here:
-      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-      context.globalCompositeOperation = 'destination-over';
+    if (!formContext){
+      errorMessages.push("Form components need to be wrapped in a form");
+    }
 
-      // Fill in the background. We do this by drawing a rectangle
-      // filling the entire canvas, using the provided color.
-      context.fillStyle = color;
-      context.fillRect(0, 0, canvas.width, canvas.height);
+    if (!field){
+      errorMessages.push("Please select a text field");
+    }
 
-      // Restore the original context state from `context.save()`
-      context.restore();
+    if (!penWidth){
+      errorMessages.push("Please set a pen size");
+    }
+
+    if (!width){
+      errorMessages.push("Please define the width of the signature");
+    }
+
+    if (!height){
+      errorMessages.push("Please define the height of the signature");
+    }
+
+    if (!color){
+      errorMessages.push("Please define the colour of the pen");
+    }
+
+    if (!background){
+      errorMessages.push("Please define the background colour");
+    }
+
+    if (errorMessages.length > 0){
+      canBeDisplayed=false;
     }
   }
 
-  function clearCanvas(){
-    const canvas = document.getElementById(canvasID)
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-  }
-  </script>
-
+</script>
 <div class="spectrum-Form-item" use:styleable={$component.styles}>
-  {#if !formContext}
-    <div class="placeholder">Form components need to be wrapped in a form</div>
+  {#if !canBeDisplayed}
+    <!-- Display error message of bad configuration -->
+    <div class="spectrum-InLineAlert spectrum-InLineAlert--notice">
+      <div class="spectrum-InLineAlert-header">
+        Signature field error
+        <svg class="spectrum-Icon spectrum-Icon--sizeM spectrum-InLineAlert-icon" focusable="false" aria-hidden="true">
+          <use xlink:href="#spectrum-icon-18-Alert" />
+        </svg>
+      </div>
+      <div class="spectrum-InLineAlert-content">
+        <ul>
+          {#each errorMessages as message}
+            <li>{message}</li>
+          {/each}
+        </ul>
+      </div>
+    </div>
   {:else}
     <label
       class:hidden={!label}
@@ -172,109 +133,28 @@ $: formField = formApi?.registerField(
       {label || " "}
     </label>
     <div class="spectrum-Form-itemField">
-      {#if showClearSignatureButton}
-        <div style="padding-right:5px;padding-bottom:5px;">
-          {#if showButtonIcon}
-            <Button icon="Erase" primary on:click={eraseSignatureModal.show}>
-              {clearSignatureButtonText}
-            </Button>
-          {:else}
-            <Button primary on:click={eraseSignatureModal.show}>
-              {clearSignatureButtonText}
-            </Button>
-          {/if}
-          <Modal bind:this={eraseSignatureModal}>
-            <ModalContent
-              title={modalTitle}
-              confirmText={modalActionButtonText}
-              onConfirm={clearCanvas}
-            >
-              <span
-                >{modalBody}</span
-              >
-            </ModalContent>
-          </Modal>
-        </div>
-      {/if}
-      <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
-      id={canvasID}
-      {width}
-      {height}
-      style:background
-      bind:this={canvas} 
-      on:mousedown={handleStart}	
-      on:touchstart={e => {
-        const { clientX, clientY } = e.touches[0]
-        handleStart({
-          offsetX: clientX - l,
-          offsetY: clientY - t
-        })
-      }}	
-      on:mouseup={handleEnd}				
-      on:touchend={handleEnd}				
-      on:mouseleave={handleEnd}
-      on:mousemove={handleMove}
-      on:touchmove={e => {
-        const { clientX, clientY } = e.touches[0]
-        handleMove({
-          offsetX: clientX - l,
-          offsetY: clientY - t
-        })
-      }}
-      />
+      <Canvas 
+        {width}
+        {height}
+        {color}
+        {background}
+        {penWidth}
+        {saveBackgroundColour}
+        {showClearSignatureButton}
+        {showButtonIcon}
+        {clearSignatureButtonText}
+        {setSignatureValue}
+        {modalTitle}
+        {modalActionButtonText}
+        {modalBody}
+        {borderOutline}
+        {borderColor}
+        {borderWidth}
+      >
+      </Canvas>
     </div>
-    {#if !field}
-    <div class="error">Please select a text field</div>
-    {/if}
-    {#if !penWidth}
-    <div class="error">Please set a pen size</div>
-    {/if}
-    {#if !width}
-    <div class="error">Please define width e.g. 300</div>
-    {/if}
-    {#if !height}
-    <div class="error">Please define height e.g. 300</div>
-    {/if}
-    {#if !color}
-    <div class="error">Please define a pen colour e.g. Black</div>
-    {/if}
-    {#if !background}
-    <div class="error">Please define a background colour e.g. White</div>
-    {/if}
     {#if fieldState?.error}
       <div class="error">{fieldState.error}</div>
     {/if}
   {/if}
 </div>
-
-<style>
-  .placeholder {
-    color: var(--spectrum-global-color-gray-600);
-  }
-  label {
-    white-space: nowrap;
-  }
-  label.hidden {
-    padding: 0;
-  }
-  .spectrum-Form-itemField {
-    position: relative;
-    width: 100%;
-  }
-  .spectrum-FieldLabel--right,
-  .spectrum-FieldLabel--left {
-    padding-right: var(--spectrum-global-dimension-size-200);
-  }
-  .error {
-    color: var(
-      --spectrum-semantic-negative-color-default,
-      var(--spectrum-global-color-red-500)
-    );
-    font-size: var(--spectrum-global-dimension-font-size-75);
-    margin-top: var(--spectrum-global-dimension-size-75);
-  }
-  .spectrum-FieldLabel--right,
-  .spectrum-FieldLabel--left {
-    padding-right: var(--spectrum-global-dimension-size-200);
-  }
-</style>
