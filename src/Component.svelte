@@ -21,12 +21,16 @@
   export let modalBody
   export let saveBackgroundColour
   export let signatureData
+  //export let required
+
+  let initalImage
+  let currentImage
 
   let canBeDisplayed
   let errorMessages = [];
   
   //Budibase SDK
-  const { styleable } = getContext("sdk");
+  const { styleable, builderStore, notificationStore } = getContext("sdk");
 
   //Form API
   const component = getContext("component");
@@ -36,6 +40,9 @@
 
   let fieldApi
   let fieldState
+  let inBuilder = false
+
+  console.log(fieldState);
 
   const formApi = formContext?.formApi;
   const labelPos = fieldGroupContext?.labelPosition || "above";
@@ -62,8 +69,12 @@ $: formField = formApi?.registerField(
     unsubscribe?.();
   });
 
-  function setSignatureValue(img){
+  function setSignatureValue(img, inital){
     fieldApi.setValue(img);
+    currentImage = img;
+    if (inital){
+      initalImage = img;
+    }
   }
 
   $: checkValid(field, formContext, penWidth, width, height, color, background)
@@ -105,10 +116,26 @@ $: formField = formApi?.registerField(
     }
   }
 
+  //$: compareImages(required, initalImage, currentImage);
+
+  //need to figure out how to pass validation
+  //function compareImages(required, initalImage, currentImage){
+  //  if (required){
+  //    if (initalImage === currentImage){
+  //      notificationStore.actions.warning(
+  //        `Please draw your signature`
+  //      )
+  //    }
+  //  }
+  //}
+
+  if (($builderStore.inBuilder)){
+    inBuilder = true;
+  }
 </script>
 <div class="spectrum-Form-item" use:styleable={$component.styles}>
   {#if !canBeDisplayed}
-    <!-- Display error message of bad configuration -->
+    <!-- Display error messages when requirements are not defined -->
     <div class="spectrum-InLineAlert spectrum-InLineAlert--notice">
       <div class="spectrum-InLineAlert-header">
         Signature field error
@@ -150,6 +177,7 @@ $: formField = formApi?.registerField(
         {borderOutline}
         {borderColor}
         {borderWidth}
+        {inBuilder}
       >
       </Canvas>
     </div>

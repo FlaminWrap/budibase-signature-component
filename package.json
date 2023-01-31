@@ -1,10 +1,11 @@
 {
   "name": "Budibase-Signature-Plugin",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A plugin that allows signatures to be created and saved in budibase",
   "license": "MIT",
   "svelte": "index.js",
   "module": "dist/plugin.min.js",
+  "author": "Lewis McRobbie",
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -cw"

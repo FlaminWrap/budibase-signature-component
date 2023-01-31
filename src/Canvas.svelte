@@ -20,6 +20,7 @@
     export let borderOutline = "none"
     export let borderColor = "#000000"
     export let borderWidth = "1px"
+    export let inBuilder = false
 	
     let eraseSignatureModal
 	let canvas
@@ -30,12 +31,15 @@
 	let t, l
 	
 	onMount(() => {
-        context = canvas.getContext('2d')
-        context.lineWidth = penWidth;
-        context.lineJoin = "round";
-        context.lineCap = "round";
-		
-		handleSize()
+        if (!inBuilder){
+            context = canvas.getContext('2d')
+            context.lineWidth = penWidth;
+            context.lineJoin = "round";
+            context.lineCap = "round";
+            
+            handleSize();
+            saveSignature(true);
+        }
 	})
 	
 	$: if(context) {
@@ -43,90 +47,114 @@
 	}
 	
 	const handleStart = (({ offsetX: x, offsetY: y }) => { 
-		if(color === background) {
-			context.clearRect(0, 0, width, height)
-		} else {
-			isDrawing = true
-			start = { x, y }
-		}
+        if (!inBuilder){
+            if(color === background) {
+                context.clearRect(0, 0, width, height)
+            } else {
+                isDrawing = true
+                start = { x, y }
+            }
+        }
 	})
 	
 	const handleEnd = () => { 
-        isDrawing = false;
-        saveSignature();
-    }
-
-	const handleMove = (({ offsetX: x1, offsetY: y1 }) => {
-		if(!isDrawing) return
-		
-		const { x, y } = start
-		context.beginPath()
-		context.moveTo(x, y)
-		context.lineTo(x1, y1)
-		context.closePath()
-		context.stroke()
-		
-		start = { x: x1, y: y1 }
-	})
-	
-	const handleSize = () => {
-		const { top, left } = canvas.getBoundingClientRect()
-		t = top
-		l = left
-	}
-
-    function clearCanvas(){
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        saveSignature();
-    }
-
-    function fillCanvasBackgroundWithColor(color) {
-        if (saveBackgroundColour){
-            const context = canvas.getContext('2d');
-            context.save();
-            context.globalCompositeOperation = 'destination-over';
-            context.fillStyle = color;
-            context.fillRect(0, 0, canvas.width, canvas.height);
-            context.restore();
+        if (!inBuilder){
+            isDrawing = false;
+            saveSignature(false);
         }
     }
 
-    function saveSignature(){
-        fillCanvasBackgroundWithColor(background);
-        let img = canvas.toDataURL("image/png");
-        setSignatureValue(img);
+	const handleMove = (({ offsetX: x1, offsetY: y1 }) => {
+        if (!inBuilder){
+            if(!isDrawing) return
+            
+            const { x, y } = start
+            context.beginPath()
+            context.moveTo(x, y)
+            context.lineTo(x1, y1)
+            context.closePath()
+            context.stroke()
+            
+            start = { x: x1, y: y1 }
+        }
+	})
+	
+	const handleSize = () => {
+        const { top, left } = canvas.getBoundingClientRect()
+        t = top
+        l = left
+	}
+
+    function clearCanvas(){
+        if (!inBuilder){
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            saveSignature(false);
+        }
+    }
+
+    function fillCanvasBackgroundWithColor(color) {
+        if (!inBuilder){
+            if (saveBackgroundColour){
+                const context = canvas.getContext('2d');
+                context.save();
+                context.globalCompositeOperation = 'destination-over';
+                context.fillStyle = color;
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.restore();
+            }
+        }
+    }
+
+    function saveSignature(inital){
+        if (!inBuilder){
+            fillCanvasBackgroundWithColor(background);
+            let img = canvas.toDataURL("image/png");
+            setSignatureValue(img, inital);
+        }
     }
 
 </script>
 
 <svelte:window on:resize={handleSize} />
-
 {#if showClearSignatureButton}
-<div style="padding-right:5px;padding-bottom:5px;">
-  {#if showButtonIcon}
-    <Button icon="Erase" primary on:click={eraseSignatureModal.show}>
-      {clearSignatureButtonText}
-    </Button>
-  {:else}
-    <Button primary on:click={eraseSignatureModal.show}>
-      {clearSignatureButtonText}
-    </Button>
-  {/if}
-  <Modal bind:this={eraseSignatureModal}>
-    <ModalContent
-      title={modalTitle}
-      confirmText={modalActionButtonText}
-      onConfirm={clearCanvas}
-    >
-      <span
-        >{modalBody}</span
-      >
-    </ModalContent>
-  </Modal>
+<div style="padding-right:8px;padding-bottom:8px;">
+    {#if showButtonIcon}
+        {#if !inBuilder}
+        <Button icon="Erase" primary on:click={eraseSignatureModal.show}>
+            {clearSignatureButtonText}
+        </Button>
+        {:else}
+        <Button icon="Erase" primary>
+            {clearSignatureButtonText}
+        </Button>
+        {/if}
+    {:else}
+        {#if !inBuilder}
+            <Button primary on:click={eraseSignatureModal.show}>
+                {clearSignatureButtonText}
+            </Button>
+        {:else}
+            <Button primary>
+                {clearSignatureButtonText}
+            </Button>
+        {/if}
+    {/if}
+    {#if !inBuilder}
+    <Modal bind:this={eraseSignatureModal}>
+        <ModalContent
+            title={modalTitle}
+            confirmText={modalActionButtonText}
+            onConfirm={clearCanvas}
+            >
+            <span
+                >{modalBody}</span
+            >
+        </ModalContent>
+    </Modal>
+    {/if}
 </div>
 {/if}
-
 <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
 				{width}
 				{height}
