@@ -42,8 +42,6 @@
   let fieldState
   let inBuilder = false
 
-  console.log(fieldState);
-
   const formApi = formContext?.formApi;
   const labelPos = fieldGroupContext?.labelPosition || "above";
 $: formStep = formStepContext ? $formStepContext || 1 : 1;
