@@ -169,14 +169,14 @@
 					})
 				}}	
 				on:mouseup={handleEnd}				
-				on:touchend={handleEnd}				
+				on:touchend|preventDefault={handleEnd}				
 				on:mouseleave={handleEnd}
 				on:mousemove={handleMove}
-				on:touchmove={e => {
+				on:touchmove|preventDefault={e => {
 					const { clientX, clientY } = e.touches[0]
 					handleMove({
 						offsetX: clientX - l,
 						offsetY: clientY - t
-					})
+					}) 
 				}}
 				/>
