@@ -48,9 +48,6 @@
 	
 	const handleStart = (({ offsetX: x, offsetY: y }) => { 
         if (!inBuilder){
-            const { top, left } = canvas.getBoundingClientRect()
-            t = top
-            l = left
             if(color === background) {
                 context.clearRect(0, 0, width, height)
             } else {
@@ -69,22 +66,14 @@
 
 	const handleMove = (({ offsetX: x1, offsetY: y1 }) => {
         if (!inBuilder){
-            const { top, left } = canvas.getBoundingClientRect()
-            t = top
-            l = left
             if(!isDrawing) return
             
             const { x, y } = start
-
-            if (x >= 0){
-                if (y >= 0){
-                context.beginPath()
-                context.moveTo(x, y)
-                context.lineTo(x1, y1)
-                context.closePath()
-                context.stroke()
-                }
-            }
+            context.beginPath()
+            context.moveTo(x, y)
+            context.lineTo(x1, y1)
+            context.closePath()
+            context.stroke()
 
             start = { x: x1, y: y1 }
         }
@@ -174,6 +163,7 @@
 				on:mousedown={handleStart}	
 				on:touchstart|preventDefault={e => {
 					const { clientX, clientY } = e.touches[0]
+                    handleSize()
 					handleStart({
 						offsetX: clientX - l,
 						offsetY: clientY - t
@@ -185,6 +175,7 @@
 				on:mousemove={handleMove}
 				on:touchmove|preventDefault={e => {
 					const { clientX, clientY } = e.touches[0]
+                    handleSize()
 					handleMove({
 						offsetX: clientX - l,
 						offsetY: clientY - t
