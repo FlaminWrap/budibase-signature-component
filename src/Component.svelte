@@ -1,14 +1,14 @@
 <script>
   import { getContext, onDestroy, onMount } from "svelte"
   import Canvas from "./Canvas.svelte";
-
+  import FieldLabel from "../node_modules/@budibase/bbui/src/Form/FieldLabel.svelte"
   //Input variables
   export let field
   export let label
-	export let width
-	export let height
-	export let color
-	export let background
+  export let width
+  export let height
+  export let color
+  export let background
   export let borderOutline
   export let borderColor
   export let borderWidth
@@ -21,7 +21,8 @@
   export let modalBody
   export let saveBackgroundColour
   export let signatureData
-  //export let required
+  export let validation
+  export let tooltip = ""
 
   let initalImage
   let currentImage
@@ -48,9 +49,9 @@ $: formStep = formStepContext ? $formStepContext || 1 : 1;
 $: formField = formApi?.registerField(
     field,
     "text",
-    0,
+    "",
     false,
-    null,
+    validation,
     formStep
   );
 
@@ -72,6 +73,9 @@ $: formField = formApi?.registerField(
     currentImage = img;
     if (inital){
       initalImage = img;
+    }
+    if (initalImage === currentImage){
+      fieldApi.setValue("");
     }
   }
 
@@ -114,24 +118,11 @@ $: formField = formApi?.registerField(
     }
   }
 
-  //$: compareImages(required, initalImage, currentImage);
-
-  //need to figure out how to pass validation
-  //function compareImages(required, initalImage, currentImage){
-  //  if (required){
-  //    if (initalImage === currentImage){
-  //      notificationStore.actions.warning(
-  //        `Please draw your signature`
-  //      )
-  //    }
-  //  }
-  //}
-
   if (($builderStore.inBuilder)){
     inBuilder = true;
   }
 </script>
-<div class="spectrum-Form-item" use:styleable={$component.styles}>
+<div class="spectrum-Form-item" class:above={labelPos === "above"} use:styleable={$component.styles}>
   {#if !canBeDisplayed}
     <!-- Display error messages when requirements are not defined -->
     <div class="spectrum-InLineAlert spectrum-InLineAlert--notice">
@@ -150,15 +141,11 @@ $: formField = formApi?.registerField(
       </div>
     </div>
   {:else}
-    <label
-      class:hidden={!label}
-      for={fieldState?.fieldId}
-      class={`spectrum-FieldLabel spectrum-FieldLabel--sizeM spectrum-Form-itemLabel ${labelClass}`}
-    >
-      {label || " "}
-    </label>
+  {#if label}
+    <FieldLabel forId={fieldState?.fieldId} {label} position={labelPos} {tooltip} />
+  {/if}
     <div class="spectrum-Form-itemField">
-      <Canvas 
+      <Canvas
         {width}
         {height}
         {color}
@@ -178,9 +165,30 @@ $: formField = formApi?.registerField(
         {inBuilder}
       >
       </Canvas>
+
     </div>
     {#if fieldState?.error}
       <div class="error">{fieldState.error}</div>
     {/if}
   {/if}
 </div>
+
+<style>
+  .spectrum-Form-item.above {
+    display: flex;
+    flex-direction: column;
+  }
+  .spectrum-Form-itemField {
+    position: relative;
+    width: 100%;
+  }
+
+  .error {
+    color: var(
+      --spectrum-semantic-negative-color-default,
+      var(--spectrum-global-color-red-500)
+    );
+    font-size: var(--spectrum-global-dimension-font-size-75);
+    margin-top: var(--spectrum-global-dimension-size-75);
+  }
+</style>

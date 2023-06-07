@@ -175,6 +175,11 @@
           "setting": "showClearSignatureButton",
           "value": true
         }
+      },
+      {
+        "type": "validation/string",
+        "label": "Validation",
+        "key": "validation"
       }
     ]
   }
