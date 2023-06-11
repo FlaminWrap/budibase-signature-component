@@ -144,7 +144,7 @@
         {/if}
     </div>
 {/if}
-<canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
+<canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}; margin: {borderWidth}"
 				{width}
 				{height}
 				style:background

@@ -71,6 +71,10 @@
         "barStyle": "picker",
         "options": [
           {
+            "label": "None",
+            "value": "none"
+          },
+          {
             "label": "Dashed",
             "value": "dashed"
           },
@@ -89,10 +93,6 @@
           {
             "label": "Inset",
             "value": "inset"
-          },
-          {
-            "label": "None",
-            "value": "none"
           },
           {
             "label": "Outset",

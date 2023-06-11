@@ -150,6 +150,14 @@ $: formField = formApi?.registerField(
       buttonIcon = ""
     }
   }
+
+  $: borderWidthEnabled(borderOutline)
+
+  function borderWidthEnabled(borderOutline){
+    if (borderOutline === "none"){
+      borderWidth = "0px"
+    }
+  }
 </script>
 
 <div class="spectrum-Form-item" class:above={labelPos === "above"} use:styleable={$component.styles}>
