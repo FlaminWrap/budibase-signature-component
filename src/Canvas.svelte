@@ -12,7 +12,7 @@
     export let saveBackgroundColour = true
     export let setSignatureValue = () => {}
     export let showClearSignatureButton = true
-    export let showButtonIcon = true
+    export let buttonIcon = "Erase"
     export let clearSignatureButtonText = "Clear Signature"
     export let modalTitle = "Clear Signature"
     export let modalActionButtonText = "Clear"
@@ -21,7 +21,10 @@
     export let borderColor = "#000000"
     export let borderWidth = "1px"
     export let inBuilder = false
-	
+    export let buttonStyle = [true, false, false, false, false]
+    export let buttonSize = "M"
+    export let buttonQuiet = false
+
     let eraseSignatureModal
 	let canvas
 	let context
@@ -118,42 +121,28 @@
 
 <svelte:window on:resize={handleSize} />
 {#if showClearSignatureButton}
-<div style="padding-right:8px;padding-bottom:8px;">
-    {#if showButtonIcon}
+    <div style="padding-right:8px;padding-bottom:8px;">
         {#if !inBuilder}
-        <Button icon="Erase" primary on:click={eraseSignatureModal.show}>
-            {clearSignatureButtonText}
-        </Button>
-        {:else}
-        <Button icon="Erase" primary>
-            {clearSignatureButtonText}
-        </Button>
-        {/if}
-    {:else}
-        {#if !inBuilder}
-            <Button primary on:click={eraseSignatureModal.show}>
+            <Button icon={buttonIcon} size={buttonSize} primary={buttonStyle[0]} secondary={buttonStyle[1]} cta={buttonStyle[2]} warning={buttonStyle[3]} overBackground={buttonStyle[4]} quiet={buttonQuiet} on:click={eraseSignatureModal.show}>
                 {clearSignatureButtonText}
             </Button>
-        {:else}
-            <Button primary>
+            <Modal bind:this={eraseSignatureModal}>
+                <ModalContent
+                    title={modalTitle}
+                    confirmText={modalActionButtonText}
+                    onConfirm={clearCanvas}
+                    >
+                    <span
+                        >{modalBody}</span
+                    >
+                </ModalContent>
+            </Modal>
+            {:else}
+            <Button icon={buttonIcon} size={buttonSize} primary={buttonStyle[0]} secondary={buttonStyle[1]} cta={buttonStyle[2]} warning={buttonStyle[3]} overBackground={buttonStyle[4]} quiet={buttonQuiet}>
                 {clearSignatureButtonText}
             </Button>
         {/if}
-    {/if}
-    {#if !inBuilder}
-    <Modal bind:this={eraseSignatureModal}>
-        <ModalContent
-            title={modalTitle}
-            confirmText={modalActionButtonText}
-            onConfirm={clearCanvas}
-            >
-            <span
-                >{modalBody}</span
-            >
-        </ModalContent>
-    </Modal>
-    {/if}
-</div>
+    </div>
 {/if}
 <canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}"
 				{width}

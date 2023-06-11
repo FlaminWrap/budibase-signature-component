@@ -124,7 +124,10 @@
         "type": "boolean",
         "key": "showClearSignatureButton",
         "label": "Show Clear Signature Button",
-        "defaultValue": true
+        "barTitle": "Show Clear Signature Button",
+        "defaultValue": true,
+        "showInBar": true,
+        "barIcon": "Button"
       },
       {
         "type": "boolean",
@@ -135,6 +138,78 @@
           "setting": "showClearSignatureButton",
           "value": true
         }
+      },
+      {
+        "type": "select",
+        "label": "Button Variant",
+        "key": "buttonType",
+        "showInBar": true,
+        "barTitle": "Button Variant",
+        "options": [
+          {
+            "label": "Primary",
+            "value": 0
+          },
+          {
+            "label": "Secondary",
+            "value": 1
+          },
+          {
+            "label": "Action",
+            "value": 2
+          },
+          {
+            "label": "Warning",
+            "value": 3
+          },
+          {
+            "label": "Over background",
+            "value": 4
+          }
+        ],
+        "defaultValue": 0,
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "select",
+        "label": "Button Size",
+        "key": "buttonSize",
+        "showInBar": true,
+        "options": [
+          {
+            "label": "Small",
+            "value": "S"
+          },
+          {
+            "label": "Medium",
+            "value": "M"
+          },
+          {
+            "label": "Large",
+            "value": "L"
+          },
+          {
+            "label": "Extra large",
+            "value": "XL"
+          }
+        ],
+        "defaultValue": "M",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "boolean",
+        "label": "Button Quiet",
+        "key": "buttonQuiet",
+        "showInBar": true,
+        "barIcon": "VisibilityOff",
+        "barTitle": "Quiet button",
+        "barSeparator": false
       },
       {
         "type": "text",

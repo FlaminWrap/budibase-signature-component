@@ -23,9 +23,15 @@
   export let signatureData
   export let validation
   export let tooltip = ""
+  export let buttonType
+  export let buttonSize
+  export let buttonQuiet
 
   let initalImage
   let currentImage
+
+  let buttonStyle = []
+  let buttonIcon
 
   let canBeDisplayed
   let errorMessages = [];
@@ -121,7 +127,31 @@ $: formField = formApi?.registerField(
   if (($builderStore.inBuilder)){
     inBuilder = true;
   }
+
+  $: setupButtonType(buttonType)
+
+  function setupButtonType(buttonType){
+    buttonStyle = []
+    for (let i = 0; i < 5; i++){
+      if (buttonType === i){
+        buttonStyle.push(true)
+      } else {
+        buttonStyle.push(false)
+      }
+    }
+  }
+
+  $: buttonIconSetup(showButtonIcon)
+
+  function buttonIconSetup(showButtonIcon){
+    if (showButtonIcon){
+      buttonIcon = "Erase"
+    } else {
+      buttonIcon = ""
+    }
+  }
 </script>
+
 <div class="spectrum-Form-item" class:above={labelPos === "above"} use:styleable={$component.styles}>
   {#if !canBeDisplayed}
     <!-- Display error messages when requirements are not defined -->
@@ -153,7 +183,7 @@ $: formField = formApi?.registerField(
         {penWidth}
         {saveBackgroundColour}
         {showClearSignatureButton}
-        {showButtonIcon}
+        {buttonIcon}
         {clearSignatureButtonText}
         {setSignatureValue}
         {modalTitle}
@@ -163,6 +193,9 @@ $: formField = formApi?.registerField(
         {borderColor}
         {borderWidth}
         {inBuilder}
+        {buttonStyle}
+        {buttonSize}
+        {buttonQuiet}
       >
       </Canvas>
 
