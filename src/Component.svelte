@@ -26,6 +26,12 @@
   export let buttonType
   export let buttonSize
   export let buttonQuiet
+  export let signatureLine
+  export let xOnSignatureLine
+  export let xType
+  export let signatureLineThickness
+  export let xSize
+  export let signatureLineColor
 
   let initalImage
   let currentImage
@@ -35,7 +41,7 @@
 
   let canBeDisplayed
   let errorMessages = [];
-  
+
   //Budibase SDK
   const { styleable, builderStore, notificationStore } = getContext("sdk");
 
@@ -204,6 +210,12 @@ $: formField = formApi?.registerField(
         {buttonStyle}
         {buttonSize}
         {buttonQuiet}
+        {signatureLine}
+        {xOnSignatureLine}
+        {xType}
+        {signatureLineThickness}
+        {xSize}
+        {signatureLineColor}
       >
       </Canvas>
 

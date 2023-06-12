@@ -24,12 +24,19 @@
     export let buttonStyle = [true, false, false, false, false]
     export let buttonSize = "M"
     export let buttonQuiet = false
+    export let signatureLine = false
+    export let xOnSignatureLine = true
+    export let xType = "✗"
+    export let signatureLineThickness = "2px"
+    export let xSize = "32pt"
+    export let signatureLineColor = "#000000"
 
     let eraseSignatureModal
 	let canvas
 	let context
 	let isDrawing
 	let start
+	let xWidth
 	
 	let t, l
 	
@@ -144,7 +151,15 @@
         {/if}
     </div>
 {/if}
-<canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}; margin: {borderWidth}"
+<div class="container_div" style="position:relative;">
+    {#if signatureLine}
+    <div class="hover_div" style="position:absolute; width:calc({width} - 20px); bottom: 10px; left: 10px; font-size: {xSize}; border-bottom: {signatureLineThickness} solid {signatureLineColor}; color: {signatureLineColor}; pointer-events: none; !important; display:block;z-index:9999">
+        {#if xOnSignatureLine}
+        {xType}
+        {/if}
+    </div>
+    {/if}
+<canvas style="outline-style: {borderOutline}; outline-color: {borderColor}; outline-width: {borderWidth}; margin: {borderWidth}; position: relative;"
 				{width}
 				{height}
 				style:background
@@ -171,3 +186,4 @@
 					}) 
 				}}
 				/>
+</div>

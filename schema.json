@@ -206,6 +206,7 @@
         "type": "boolean",
         "label": "Button Quiet",
         "key": "buttonQuiet",
+        "defaultValue": false,
         "showInBar": true,
         "barIcon": "VisibilityOff",
         "barTitle": "Quiet button",
@@ -250,6 +251,98 @@
           "setting": "showClearSignatureButton",
           "value": true
         }
+      },
+      {
+        "type": "boolean",
+        "label": "Signature Line",
+        "key": "signatureLine",
+        "defaultValue": false
+      },
+      {
+        "type": "boolean",
+        "label": "Show X On Signature Line",
+        "key": "xOnSignatureLine",
+        "defaultValue": true,
+        "dependsOn": {
+          "setting": "signatureLine",
+          "value": true
+        }
+      },
+      {
+        "type": "select",
+        "label": "X type",
+        "key": "xType",
+        "options": [
+          {
+            "label": "✗",
+            "value": "✗"
+          },
+          {
+            "label": "✘",
+            "value": "✘"
+          },
+          {
+            "label": "🗴",
+            "value": "🗴"
+          },
+          {
+            "label": "X",
+            "value": "X"
+          },
+          {
+            "label": "✕",
+            "value": "✕"
+          },
+          {
+            "label": "❌",
+            "value": "❌"
+          }
+        ],
+        "defaultValue": "✗",
+        "dependsOn": {
+          "setting": "signatureLine",
+          "value": true
+        }
+      },
+      {
+        "type": "select",
+        "label": "Signature Line Tickness",
+        "key": "signatureLineThickness",
+        "options": [
+          {
+            "label": "Thin",
+            "value": "1px"
+          },
+          {
+            "label": "Normal",
+            "value": "3px"
+          },
+          {
+            "label": "Thick",
+            "value": "5px"
+          }
+        ],
+        "defaultValue": "1px",
+        "dependsOn": {
+          "setting": "signatureLine",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "key": "xSize",
+        "label": "X Size",
+        "defaultValue": "32pt",
+        "dependsOn": {
+          "setting": "showClearSignatureButton",
+          "value": true
+        }
+      },
+      {
+        "type": "text",
+        "key": "signatureLineColor",
+        "label": "Signature Line Colour",
+        "defaultValue": "#000000"
       },
       {
         "type": "validation/string",
